@@ -27,7 +27,7 @@ const server_host = process.env.BASE_URL;
 
 
 app.use('/', Requests);
-  
+
 app.listen(server_port,server_host, () => {
-console.log(`Example app listening on port ${server_port}`)
+console.log(`Resellers App Started on ${server_port}`)
 })

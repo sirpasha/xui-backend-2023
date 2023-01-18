@@ -7,7 +7,7 @@ const jtfd = require("json-to-form-data");
 const https = require('https');
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 const { v4: uuidv4 } = require('uuid');
-const base64json = require('base64json');
+const base64json = require('base64json');
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 dotenv.config();
@@ -34,6 +34,98 @@ router.get('/check', async (req, res, err) => {
         DEVELOPER: process.env.DEVELOPER,
         VERSION: process.env.VERSION
     });
+});
+
+router.post('/user', async (req, res, err) => {
+    try {
+        const uri = req.body.uri;
+        const checkURI = async () => {
+            if (uri.startsWith("vmess://")) {
+                const theURI = await uri.slice(8);
+                const userDetails = await base64json.parse(theURI);
+                return userDetails;
+            } else if (uri.startsWith("trojan://")) {
+                const theURI = await uri.slice(9);
+                const server = theURI.substring(
+                    theURI.indexOf("@") + 1, 
+                    theURI.lastIndexOf(":")
+                );
+                const port = theURI.substring(
+                    theURI.indexOf(":") + 1, 
+                    theURI.lastIndexOf("#")
+                );
+                const remarkMain = theURI.substring(
+                    theURI.indexOf("#") + 1
+                );
+                const remark = remarkMain.replace('%20', " ");
+                const userDetails = {
+                    add: server,
+                    ps: remark,
+                    port: port
+                };
+                return userDetails;
+            } else if (uri.startsWith("vless://")) {
+                const theURI = await uri.slice(8);
+                const server = theURI.substring(
+                    theURI.indexOf("@") + 1, 
+                    theURI.lastIndexOf(":")
+                );
+                const port = theURI.substring(
+                    theURI.indexOf(":") + 1, 
+                    theURI.lastIndexOf("?")
+                );
+                const remark = theURI.substring(
+                    theURI.indexOf("#") + 1
+                );
+                const userDetails = {
+                    add: server,
+                    ps: remark,
+                    port: port
+                };
+                return userDetails;
+            } else {
+                throw err;
+            }
+        };
+        const theUser = await checkURI(uri);
+        await axios.post(`https://${theUser.add}:61501/login`, data, { httpsAgent: httpsAgent})
+        .then (async (response) => {
+            const receivedCookie = response.headers['set-cookie'];
+            const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+            const theCookie = cookie.replace('"', '');
+            const headers = {
+                headers: {
+                    "Cookie": theCookie
+                }
+            };
+            await axios.post(`https://${theUser.add}:61501/xui/inbound/list`, {}, headers, { httpsAgent: httpsAgent })
+            .then(async (response) => {
+                const users = response.data.obj;
+                const user = await users.find(el => el.remark == theUser.ps);
+                if (user.remark == theUser.ps && user.port == theUser.port) {
+                    res.status(200).json({
+                        res: user
+                    });
+                } else {
+                    throw err;
+                }
+            })
+            .catch(err => {
+                res.status(400).json({
+                    err: "User Not found"
+                });
+            })
+        })
+        .catch(err => {
+            res.status(400).json({
+                err: "Error Logging In to Access Server"
+            });
+        })
+    } catch {
+        res.status(400).json({
+            err: "input link error"
+        });
+    };
 });
 
 // Get Server's Status FR ##########################################################################################################################
@@ -193,7 +285,17 @@ router.post('/de/add', async (req, res, err) => {
                           };
                         const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
                         res.status(200).json({
-                            user: `vmess://${theCreatedUser}`
+                            uri: `vmess://${theCreatedUser}`,
+                            id: user.id,
+                            up: user.up,
+                            down: user.down,
+                            total: user.total,
+                            remark: user.remark,
+                            enable: user.enable,
+                            expiryTime: user.expiryTime,
+                            port: user.port,
+                            protocol: user.protocol,
+                            streamSettings: user.streamSettings
                         });
                     } else {
                         throw err;
@@ -290,7 +392,17 @@ router.post('/nl/add', async (req, res, err) => {
                           console.log(userPrefix);
                         const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
                         res.status(200).json({
-                            user: `vmess://${theCreatedUser}`
+                            uri: `vmess://${theCreatedUser}`,
+                            id: user.id,
+                            up: user.up,
+                            down: user.down,
+                            total: user.total,
+                            remark: user.remark,
+                            enable: user.enable,
+                            expiryTime: user.expiryTime,
+                            port: user.port,
+                            protocol: user.protocol,
+                            streamSettings: user.streamSettings
                         });
                     } else {
                         throw err;
@@ -387,7 +499,17 @@ router.post('/fr/add', async (req, res, err) => {
                           console.log(userPrefix);
                         const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
                         res.status(200).json({
-                            user: `vmess://${theCreatedUser}`
+                            uri: `vmess://${theCreatedUser}`,
+                            id: user.id,
+                            up: user.up,
+                            down: user.down,
+                            total: user.total,
+                            remark: user.remark,
+                            enable: user.enable,
+                            expiryTime: user.expiryTime,
+                            port: user.port,
+                            protocol: user.protocol,
+                            streamSettings: user.streamSettings
                         });
                     } else {
                         throw err;
@@ -423,6 +545,120 @@ router.post('/fr/add', async (req, res, err) => {
             err: "Invalid Login"
         });
     });
+});
+
+
+// Get Inbounds Count Status FR ##########################################################################################################################
+router.get('/fr/inbounds', async (req, res, err) => {
+    await axios.post(`${process.env.FR}:61501/login`, data, { httpsAgent: httpsAgent})
+    .then (async (response) => {
+        const receivedCookie = response.headers['set-cookie'];
+        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+        const theCookie = cookie.replace('"', '');
+        const headers = {
+            headers: {
+                "Cookie": theCookie
+            }
+        };
+
+        await axios.post(`${process.env.FR}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+        .then (response => {
+            const serverStatus = response.data.obj;
+            res.status(200).json({
+                count: serverStatus.length
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                err: "Error Getting Status"
+            });
+        });
+    })
+    .catch(err => {
+        res.status(400).json({
+            err: "Invalid Login"
+        });
+    });
+});
+
+// Get Inbounds Count Status NL ##########################################################################################################################
+router.get('/nl/inbounds', async (req, res, err) => {
+    await axios.post(`${process.env.NL}:61501/login`, data, { httpsAgent: httpsAgent})
+    .then (async (response) => {
+        const receivedCookie = response.headers['set-cookie'];
+        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+        const theCookie = cookie.replace('"', '');
+        const headers = {
+            headers: {
+                "Cookie": theCookie
+            }
+        };
+
+        await axios.post(`${process.env.NL}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+        .then (response => {
+            const serverStatus = response.data.obj;
+            res.status(200).json({
+                count: serverStatus.length
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                err: "Error Getting Status"
+            });
+        });
+    })
+    .catch(err => {
+        res.status(400).json({
+            err: "Invalid Login"
+        });
+    });
+});
+
+// Get Inbounds Count Status DE ##########################################################################################################################
+router.get('/de/inbounds', async (req, res, err) => {
+    await axios.post(`${process.env.DE}:61501/login`, data, { httpsAgent: httpsAgent})
+    .then (async (response) => {
+        const receivedCookie = response.headers['set-cookie'];
+        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+        const theCookie = cookie.replace('"', '');
+        const headers = {
+            headers: {
+                "Cookie": theCookie
+            }
+        };
+
+        await axios.post(`${process.env.DE}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+        .then (response => {
+            const serverStatus = response.data.obj;
+            res.status(200).json({
+                count: serverStatus.length
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                err: "Error Getting Status"
+            });
+        });
+    })
+    .catch(err => {
+        res.status(400).json({
+            err: "Invalid Login"
+        });
+    });
+});
+
+// Get Resellers Credit ##########################################################################################################################
+router.get('/credit', async (req, res, err) => {
+    const credit = "10000000";
+    try {
+        res.status(200).json({
+            credit: credit
+        });
+    } catch {
+        res.status(400).json({
+            err: "Error Getting Credit"
+        });
+    }
 });
 
 module.exports = router;
