@@ -88,6 +88,7 @@ router.post('/user', async (req, res, err) => {
             }
         };
         const theUser = await checkURI(uri);
+        console.log(theUser);
         await axios.post(`https://${theUser.add}:61501/login`, data, { httpsAgent: httpsAgent})
         .then (async (response) => {
             const receivedCookie = response.headers['set-cookie'];
@@ -103,8 +104,10 @@ router.post('/user', async (req, res, err) => {
                 const users = response.data.obj;
                 const user = await users.find(el => el.remark == theUser.ps);
                 if (user.remark == theUser.ps && user.port == theUser.port) {
+                    const theCreatedUser = await base64json.stringify(theUser, null, 2);
                     res.status(200).json({
-                        res: user
+                        uri: `vmess://${theCreatedUser}`,
+                        res: user,
                     });
                 } else {
                     throw err;
