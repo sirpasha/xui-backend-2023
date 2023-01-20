@@ -611,7 +611,7 @@ router.post('/us/add', async (req, res, err) => {
             const users = response.data.obj;
             const user = users.find(el => el.remark == remark);
             if (!user || user.port != thePort) {
-                const total = 53687091200;
+                const total = 32212254720;
                 const month = 30 * 24 * 3600;
                 const expTime = (unixTimestamp() + month) * 1000;
                 const thePort = Math.floor(Math.random()*50000) + 10000;
