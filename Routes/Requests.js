@@ -961,7 +961,8 @@ router.get('/credit', async (req, res, err) => {
     const credit = "10000000";
     try {
         res.status(200).json({
-            credit: credit
+            credit: credit,
+            prefix: "Maryam"
         });
     } catch {
         res.status(400).json({
