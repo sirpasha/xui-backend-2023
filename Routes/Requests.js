@@ -823,6 +823,139 @@ router.get('/de/inbounds', async (req, res, err) => {
     });
 });
 
+
+// Get Inbounds List FR ##########################################################################################################################
+router.get('/fr/userslist', async (req, res, err) => {
+    await axios.post(`${process.env.FR}:61501/login`, data, { httpsAgent: httpsAgent})
+    .then (async (response) => {
+        const receivedCookie = response.headers['set-cookie'];
+        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+        const theCookie = cookie.replace('"', '');
+        const headers = {
+            headers: {
+                "Cookie": theCookie
+            }
+        };
+
+        await axios.post(`${process.env.FR}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+        .then (response => {
+            const serverStatus = response.data.obj;
+            res.status(200).json({
+                users: serverStatus
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                err: "Error Getting Status"
+            });
+        });
+    })
+    .catch(err => {
+        res.status(400).json({
+            err: "Invalid Login"
+        });
+    });
+});
+
+// Get Inbounds List NL ##########################################################################################################################
+router.get('/nl/userslist', async (req, res, err) => {
+    await axios.post(`${process.env.NL}:61501/login`, data, { httpsAgent: httpsAgent})
+    .then (async (response) => {
+        const receivedCookie = response.headers['set-cookie'];
+        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+        const theCookie = cookie.replace('"', '');
+        const headers = {
+            headers: {
+                "Cookie": theCookie
+            }
+        };
+
+        await axios.post(`${process.env.NL}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+        .then (response => {
+            const serverStatus = response.data.obj;
+            res.status(200).json({
+                users: serverStatus
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                err: "Error Getting Status"
+            });
+        });
+    })
+    .catch(err => {
+        res.status(400).json({
+            err: "Invalid Login"
+        });
+    });
+});
+
+// Get Inbounds List DE ##########################################################################################################################
+router.get('/de/userslist', async (req, res, err) => {
+    await axios.post(`${process.env.DE}:61501/login`, data, { httpsAgent: httpsAgent})
+    .then (async (response) => {
+        const receivedCookie = response.headers['set-cookie'];
+        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+        const theCookie = cookie.replace('"', '');
+        const headers = {
+            headers: {
+                "Cookie": theCookie
+            }
+        };
+
+        await axios.post(`${process.env.DE}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+        .then (response => {
+            const serverStatus = response.data.obj;
+            res.status(200).json({
+                users: serverStatus
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                err: "Error Getting Status"
+            });
+        });
+    })
+    .catch(err => {
+        res.status(400).json({
+            err: "Invalid Login"
+        });
+    });
+});
+
+// Get Inbounds List US ##########################################################################################################################
+router.get('/us/userslist', async (req, res, err) => {
+    await axios.post(`${process.env.US}:61501/login`, data, { httpsAgent: httpsAgent})
+    .then (async (response) => {
+        const receivedCookie = response.headers['set-cookie'];
+        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+        const theCookie = cookie.replace('"', '');
+        const headers = {
+            headers: {
+                "Cookie": theCookie
+            }
+        };
+
+        await axios.post(`${process.env.US}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+        .then (response => {
+            const serverStatus = response.data.obj;
+            res.status(200).json({
+                users: serverStatus
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                err: "Error Getting Status"
+            });
+        });
+    })
+    .catch(err => {
+        res.status(400).json({
+            err: "Invalid Login"
+        });
+    });
+});
+
 // Get Resellers Credit ##########################################################################################################################
 router.get('/credit', async (req, res, err) => {
     const credit = "10000000";
