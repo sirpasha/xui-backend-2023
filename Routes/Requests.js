@@ -8,6 +8,7 @@ const https = require('https');
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 const { v4: uuidv4 } = require('uuid');
 const base64json = require('base64json');
+const { appendFile } = require('fs/promises');
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 dotenv.config();
@@ -825,8 +826,8 @@ router.get('/de/inbounds', async (req, res, err) => {
 
 
 // Get Inbounds List FR ##########################################################################################################################
-router.get('/fr/userslist', async (req, res, err) => {
-    const prefix = "FS";
+router.post('/fr/userslist', async (req, res, err) => {
+    const prefix = req.body.prefix;
     await axios.post(`${process.env.FR}:61501/login`, data, { httpsAgent: httpsAgent})
     .then (async (response) => {
         const receivedCookie = response.headers['set-cookie'];
@@ -837,19 +838,25 @@ router.get('/fr/userslist', async (req, res, err) => {
                 "Cookie": theCookie
             }
         };
-
+        console.log(prefix);
         await axios.post(`${process.env.FR}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
         .then (async (response) => {
-            const serverStatus = response.data.obj;
             const users = response.data.obj;
-            const user = await users.find(el => el.remark.startsWith(prefix));
+            let theUsers = [];
+            users.forEach(user => {
+                if ((user.remark).startsWith(prefix)) {
+                    theUsers.push(user);
+                }
+                return
+
+            });
             res.status(200).json({
-                users: user
+                users: theUsers
             });
         })
         .catch(err => {
-            res.status(400).json({
-                err: "Error Getting Status"
+            res.status(200).json({
+                users: []
             });
         });
     })
@@ -861,7 +868,8 @@ router.get('/fr/userslist', async (req, res, err) => {
 });
 
 // Get Inbounds List NL ##########################################################################################################################
-router.get('/nl/userslist', async (req, res, err) => {
+router.post('/nl/userslist', async (req, res, err) => {
+    const prefix = req.body.prefix;
     await axios.post(`${process.env.NL}:61501/login`, data, { httpsAgent: httpsAgent})
     .then (async (response) => {
         const receivedCookie = response.headers['set-cookie'];
@@ -872,17 +880,25 @@ router.get('/nl/userslist', async (req, res, err) => {
                 "Cookie": theCookie
             }
         };
-
+        console.log(prefix);
         await axios.post(`${process.env.NL}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (response => {
-            const serverStatus = response.data.obj;
+        .then (async (response) => {
+            const users = response.data.obj;
+            let theUsers = [];
+            users.forEach(user => {
+                if ((user.remark).startsWith(prefix)) {
+                    theUsers.push(user);
+                }
+                return
+
+            });
             res.status(200).json({
-                users: serverStatus
+                users: theUsers
             });
         })
         .catch(err => {
-            res.status(400).json({
-                err: "Error Getting Status"
+            res.status(200).json({
+                users: []
             });
         });
     })
@@ -894,7 +910,8 @@ router.get('/nl/userslist', async (req, res, err) => {
 });
 
 // Get Inbounds List DE ##########################################################################################################################
-router.get('/de/userslist', async (req, res, err) => {
+router.post('/de/userslist', async (req, res, err) => {
+    const prefix = req.body.prefix;
     await axios.post(`${process.env.DE}:61501/login`, data, { httpsAgent: httpsAgent})
     .then (async (response) => {
         const receivedCookie = response.headers['set-cookie'];
@@ -905,17 +922,25 @@ router.get('/de/userslist', async (req, res, err) => {
                 "Cookie": theCookie
             }
         };
-
+        console.log(prefix);
         await axios.post(`${process.env.DE}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (response => {
-            const serverStatus = response.data.obj;
+        .then (async (response) => {
+            const users = response.data.obj;
+            let theUsers = [];
+            users.forEach(user => {
+                if ((user.remark).startsWith(prefix)) {
+                    theUsers.push(user);
+                }
+                return
+
+            });
             res.status(200).json({
-                users: serverStatus
+                users: theUsers
             });
         })
         .catch(err => {
-            res.status(400).json({
-                err: "Error Getting Status"
+            res.status(200).json({
+                users: []
             });
         });
     })
@@ -927,7 +952,8 @@ router.get('/de/userslist', async (req, res, err) => {
 });
 
 // Get Inbounds List US ##########################################################################################################################
-router.get('/us/userslist', async (req, res, err) => {
+router.post('/us/userslist', async (req, res, err) => {
+    const prefix = req.body.prefix;
     await axios.post(`${process.env.US}:61501/login`, data, { httpsAgent: httpsAgent})
     .then (async (response) => {
         const receivedCookie = response.headers['set-cookie'];
@@ -938,17 +964,25 @@ router.get('/us/userslist', async (req, res, err) => {
                 "Cookie": theCookie
             }
         };
-
+        console.log(prefix);
         await axios.post(`${process.env.US}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (response => {
-            const serverStatus = response.data.obj;
+        .then (async (response) => {
+            const users = response.data.obj;
+            let theUsers = [];
+            users.forEach(user => {
+                if ((user.remark).startsWith(prefix)) {
+                    theUsers.push(user);
+                }
+                return
+
+            });
             res.status(200).json({
-                users: serverStatus
+                users: theUsers
             });
         })
         .catch(err => {
-            res.status(400).json({
-                err: "Error Getting Status"
+            res.status(200).json({
+                users: []
             });
         });
     })
