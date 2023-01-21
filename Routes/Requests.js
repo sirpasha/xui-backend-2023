@@ -826,6 +826,7 @@ router.get('/de/inbounds', async (req, res, err) => {
 
 // Get Inbounds List FR ##########################################################################################################################
 router.get('/fr/userslist', async (req, res, err) => {
+    const prefix = "FS";
     await axios.post(`${process.env.FR}:61501/login`, data, { httpsAgent: httpsAgent})
     .then (async (response) => {
         const receivedCookie = response.headers['set-cookie'];
@@ -838,10 +839,12 @@ router.get('/fr/userslist', async (req, res, err) => {
         };
 
         await axios.post(`${process.env.FR}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (response => {
+        .then (async (response) => {
             const serverStatus = response.data.obj;
+            const users = response.data.obj;
+            const user = await users.find(el => el.remark.startsWith(prefix));
             res.status(200).json({
-                users: serverStatus
+                users: user
             });
         })
         .catch(err => {
@@ -957,7 +960,7 @@ router.get('/us/userslist', async (req, res, err) => {
 });
 
 // Get Resellers Credit ##########################################################################################################################
-router.get('/credit', async (req, res, err) => {
+router.get('/reseller', async (req, res, err) => {
     const credit = "10000000";
     try {
         res.status(200).json({
