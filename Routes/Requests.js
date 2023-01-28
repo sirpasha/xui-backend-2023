@@ -1028,6 +1028,7 @@ router.get('/reseller', async (req, res, error) => {
                 throw err;
             } else {
                 res.status(200).json({
+                    username: result.username,
                     credit: result.credit,
                     prefix: result.prefix
                 });
