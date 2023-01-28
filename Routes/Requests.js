@@ -336,6 +336,7 @@ router.post('/de/add', async (req, res, err) => {
                 
                 await axios.post(`${serverUrl}:61501/xui/inbound/add`,raw, headers, { httpsAgent: httpsAgent })
                 .then (async (response) => {
+                    creditManage(req.headers.token);
                     await axios.post(`${serverUrl}:61501/xui/inbound/list`, {}, headers, { httpsAgent: httpsAgent })
                     .then(async (response) => {
                         const users = response.data.obj;
@@ -441,6 +442,7 @@ router.post('/nl/add', async (req, res, err) => {
                 
                 await axios.post(`${serverUrl}:61501/xui/inbound/add`,raw, headers, { httpsAgent: httpsAgent })
                 .then (async (response) => {
+                    creditManage(req.headers.token);
                     await axios.post(`${serverUrl}:61501/xui/inbound/list`, {}, headers, { httpsAgent: httpsAgent })
                     .then(async (response) => {
                         const users = response.data.obj;
@@ -547,6 +549,7 @@ router.post('/fr/add', async (req, res, err) => {
                 
                 await axios.post(`${serverUrl}:61501/xui/inbound/add`,raw, headers, { httpsAgent: httpsAgent })
                 .then (async (response) => {
+                    creditManage(req.headers.token);
                     await axios.post(`${serverUrl}:61501/xui/inbound/list`, {}, headers, { httpsAgent: httpsAgent })
                     .then(async (response) => {
                         const users = response.data.obj;
@@ -653,6 +656,7 @@ router.post('/us/add', async (req, res, err) => {
                 
                 await axios.post(`${serverUrl}:61501/xui/inbound/add`,raw, headers, { httpsAgent: httpsAgent })
                 .then (async (response) => {
+                    creditManage(req.headers.token);
                     await axios.post(`${serverUrl}:61501/xui/inbound/list`, {}, headers, { httpsAgent: httpsAgent })
                     .then(async (response) => {
                         const users = response.data.obj;
@@ -1027,10 +1031,13 @@ router.get('/reseller', async (req, res, error) => {
             if (err) {
                 throw err;
             } else {
+                const user = await Resellers.findOne(
+                    {username: result.username}
+                );
                 res.status(200).json({
-                    username: result.username,
-                    credit: result.credit,
-                    prefix: result.prefix
+                    username: user.username,
+                    credit: user.credit,
+                    prefix: user.prefix
                 });
             }
         });
@@ -1040,5 +1047,14 @@ router.get('/reseller', async (req, res, error) => {
         });
     }
 });
+
+const creditManage = async (value) => {
+    const token = jwt.verify(value, process.env.TOKEN, async (err,result) => {
+        const user = await Resellers.findOneAndUpdate(
+            {username: result.username},
+            { $inc: {credit: - 1} }
+        );
+    });
+};
 
 module.exports = router;
