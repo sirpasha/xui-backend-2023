@@ -8,10 +8,14 @@ const https = require('https');
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 const { v4: uuidv4 } = require('uuid');
 const base64json = require('base64json');
-const { appendFile } = require('fs/promises');
+
+const bcrypt = require('bcrypt');
+
+const Resellers = require('../Models/Resellers');
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 dotenv.config();
+
 
 const data = {
     'username': process.env.LOGIN,
@@ -20,7 +24,6 @@ const data = {
 
 // Middleware
 router.use((req, res, next) => {
-    console.clear();
     next()
 })
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -36,6 +39,39 @@ router.get('/check', async (req, res, err) => {
         VERSION: process.env.VERSION
     });
 });
+
+
+router.post('/reg', async (req, res, err) => {
+    try {
+        if (!req.is('application/json')) {
+            throw err;
+        }
+        console.log(req.body);
+        const username = req.body.username;
+        const password = req.body.password;
+        const encryptedPass = bcrypt.hashSync(req.body.password, 10);
+        const credit = req.body.credit;
+        const prefix = req.body.prefix;
+        const userDetails = {
+            username: username,
+            password: encryptedPass,
+            credit: credit,
+            prefix: prefix
+        };
+        const data = new Resellers(userDetails);
+        const newData = await data.save();
+        res.status(201).json({
+            status: 201,
+            response: newData
+        });
+    } catch (err) {
+        res.status(400).json({
+            status: 400,
+            error: err.message
+        });
+    };
+});
+
 
 router.post('/user', async (req, res, err) => {
     try {
