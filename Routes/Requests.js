@@ -1031,13 +1031,18 @@ router.post('/us/userslist', async (req, res, err) => {
 
 // Get Resellers Credit ##########################################################################################################################
 router.get('/reseller', async (req, res, err) => {
-    const credit = "10000000";
     try {
-        res.status(200).json({
-            credit: credit,
-            prefix: "Maryam"
+        const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
+            if (err) {
+                throw err;
+            } else {
+                res.status(200).json({
+                    credit: result.credit,
+                    prefix: result.prefix
+                });
+            }
         });
-    } catch {
+    } catch (err) {
         res.status(400).json({
             err: "Error Getting Credit"
         });
