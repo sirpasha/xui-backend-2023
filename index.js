@@ -27,7 +27,6 @@ app.use(function(req, res, next) {
 app.use(['/reseller', '/check', '/reg', '/user', '/us/status', '/fr/status', '/nl/status', '/de/status', '/de/add', '/us/add', '/nl/add', '/fr/add', '/nl/inbounds', '/us/inbounds', '/de/inbounds', '/fr/inbounds', '/fr/userslist', '/de/userslist', '/nl/userslist', '/us/userslist'], async (req, res, next) => {
   if (req.headers.token) {
       const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
-        console.log(result);
           if (err) {
               res.status(400).json({
                   code: 400,

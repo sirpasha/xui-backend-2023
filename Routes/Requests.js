@@ -8,6 +8,7 @@ const https = require('https');
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 const { v4: uuidv4 } = require('uuid');
 const base64json = require('base64json');
+const jwt = require('jsonwebtoken');
 
 const bcrypt = require('bcrypt');
 
@@ -32,7 +33,6 @@ router.use(bodyParser.json());
 
 // NODEJS SERVER STATUS
 router.get('/check', async (req, res, err) => {
-	console.log('Received Request');
     res.status(200).json({
         ENV: process.env.NODE_ENV,
         DEVELOPER: process.env.DEVELOPER,
@@ -46,7 +46,6 @@ router.post('/reg', async (req, res, err) => {
         if (!req.is('application/json')) {
             throw err;
         }
-        console.log(req.body);
         const username = req.body.username;
         const password = req.body.password;
         const encryptedPass = bcrypt.hashSync(req.body.password, 10);
@@ -125,7 +124,6 @@ router.post('/user', async (req, res, err) => {
             }
         };
         const theUser = await checkURI(uri);
-        console.log(theUser);
         await axios.post(`https://${theUser.add}:61501/login`, data, { httpsAgent: httpsAgent})
         .then (async (response) => {
             const receivedCookie = response.headers['set-cookie'];
@@ -462,7 +460,6 @@ router.post('/nl/add', async (req, res, err) => {
                             "tls": "tls"
                           };
 
-                          console.log(userPrefix);
                         const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
                         res.status(200).json({
                             uri: `vmess://${theCreatedUser}`,
@@ -569,7 +566,6 @@ router.post('/fr/add', async (req, res, err) => {
                             "tls": "tls"
                           };
 
-                          console.log(userPrefix);
                         const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
                         res.status(200).json({
                             uri: `vmess://${theCreatedUser}`,
@@ -676,7 +672,6 @@ router.post('/us/add', async (req, res, err) => {
                             "tls": "tls"
                           };
 
-                          console.log(userPrefix);
                         const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
                         res.status(200).json({
                             uri: `vmess://${theCreatedUser}`,
@@ -874,7 +869,6 @@ router.post('/fr/userslist', async (req, res, err) => {
                 "Cookie": theCookie
             }
         };
-        console.log(prefix);
         await axios.post(`${process.env.FR}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
         .then (async (response) => {
             const users = response.data.obj;
@@ -916,7 +910,6 @@ router.post('/nl/userslist', async (req, res, err) => {
                 "Cookie": theCookie
             }
         };
-        console.log(prefix);
         await axios.post(`${process.env.NL}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
         .then (async (response) => {
             const users = response.data.obj;
@@ -958,7 +951,6 @@ router.post('/de/userslist', async (req, res, err) => {
                 "Cookie": theCookie
             }
         };
-        console.log(prefix);
         await axios.post(`${process.env.DE}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
         .then (async (response) => {
             const users = response.data.obj;
@@ -1000,7 +992,6 @@ router.post('/us/userslist', async (req, res, err) => {
                 "Cookie": theCookie
             }
         };
-        console.log(prefix);
         await axios.post(`${process.env.US}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
         .then (async (response) => {
             const users = response.data.obj;
@@ -1030,7 +1021,7 @@ router.post('/us/userslist', async (req, res, err) => {
 });
 
 // Get Resellers Credit ##########################################################################################################################
-router.get('/reseller', async (req, res, err) => {
+router.get('/reseller', async (req, res, error) => {
     try {
         const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
             if (err) {
@@ -1044,7 +1035,7 @@ router.get('/reseller', async (req, res, err) => {
         });
     } catch (err) {
         res.status(400).json({
-            err: "Error Getting Credit"
+            err: "Error Getting Information"
         });
     }
 });
