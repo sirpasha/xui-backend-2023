@@ -199,7 +199,7 @@ router.get('/us/status', async (req, res, err) => {
     });
 });
 
-// Get Server's Status US ##########################################################################################################################
+// Get Server's Status FI ##########################################################################################################################
 router.get('/fi/status', async (req, res, err) => {
     await axios.post(`${process.env.FI}:61501/login`, data, { httpsAgent: httpsAgent})
     .then (async (response) => {
@@ -212,7 +212,7 @@ router.get('/fi/status', async (req, res, err) => {
             }
         };
 
-        await axios.post(`${process.env.US}:61501/server/status`,{}, headers, { httpsAgent: httpsAgent })
+        await axios.post(`${process.env.FI}:61501/server/status`,{}, headers, { httpsAgent: httpsAgent })
         .then (response => {
             const serverStatus = response.data;
             res.status(200).json({
