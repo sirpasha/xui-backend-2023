@@ -912,7 +912,7 @@ router.get('/fi/inbounds', async (req, res, err) => {
             }
         };
 
-        await axios.post(`${process.env.US}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+        await axios.post(`${process.env.FI}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
         .then (response => {
             const serverStatus = response.data.obj;
             res.status(200).json({
