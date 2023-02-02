@@ -16,6 +16,13 @@ const Resellers = require('./Models/Resellers');
 // Set up Global configuration access
 dotenv.config();
 
+app.use(cors());
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.header("Access-Control-Allow-Headers", "x-access-token, Origin, X-Requested-With, Content-Type, Accept");
+  next();
+}); 
 
 app.use(['/reseller', '/check', '/reg', '/user', '/us/status', '/fr/status', '/nl/status', '/de/status', '/de/add', '/us/add', '/nl/add', '/fr/add', '/nl/inbounds', '/us/inbounds', '/de/inbounds', '/fr/inbounds', '/fr/userslist', '/de/userslist', '/nl/userslist', '/us/userslist', '/fi/revise', '/nl/revise', '/de/revise', '/us/revise', '/fr/revise'], async (req, res, next) => {
   if (req.headers.token) {
