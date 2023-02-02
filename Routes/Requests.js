@@ -911,7 +911,6 @@ router.get('/fi/inbounds', async (req, res, err) => {
                 "Cookie": theCookie
             }
         };
-
         await axios.post(`${process.env.FI}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
         .then (response => {
             const serverStatus = response.data.obj;
