@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
   next();
 }); 
 
-app.use(['/reseller', '/check', '/reg', '/user', '/us/status', '/fr/status','/fr2/status', '/nl/status', '/de/status', '/de/add', '/us/add', '/nl/add', '/fr/add', '/fr2/add', '/nl/inbounds', '/us/inbounds', '/de/inbounds', '/fr/inbounds', '/fr2/inbounds', '/fr/userslist', '/fr2/userslist', '/de/userslist', '/nl/userslist', '/us/userslist', '/fi/revise', '/nl/revise', '/de/revise', '/us/revise', '/fr/revise', '/fr2/revise'], async (req, res, next) => {
+app.use(['/reseller', '/check', '/reg', '/us/status', '/fr/status','/fr2/status', '/nl/status', '/de/status', '/de/add', '/us/add', '/nl/add', '/fr/add', '/fr2/add', '/nl/inbounds', '/us/inbounds', '/de/inbounds', '/fr/inbounds', '/fr2/inbounds', '/fr/userslist', '/fr2/userslist', '/de/userslist', '/nl/userslist', '/us/userslist', '/fi/revise', '/nl/revise', '/de/revise', '/us/revise', '/fr/revise', '/fr2/revise'], async (req, res, next) => {
   if (req.headers.token) {
       const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
           if (err) {
