@@ -1204,247 +1204,355 @@ router.get('/de/inbounds', async (req, res, err) => {
 
 // Get Inbounds List FR ##########################################################################################################################
 router.post('/fr/userslist', async (req, res, err) => {
-    const prefix = req.body.prefix;
-    await axios.post(`${process.env.FR}:61501/login`, data, { httpsAgent: httpsAgent})
-    .then (async (response) => {
-        const receivedCookie = response.headers['set-cookie'];
-        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
-        const theCookie = cookie.replace('"', '');
-        const headers = {
-            headers: {
-                "Cookie": theCookie
-            }
-        };
-        await axios.post(`${process.env.FR}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (async (response) => {
-            const users = response.data.obj;
-            let theUsers = [];
-            users.forEach(user => {
-                if ((user.remark).startsWith(prefix)) {
-                    theUsers.push(user);
-                }
-                return
+    try {
+        const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
+            if (err) {
+                res.status(400).json({
+                    code: 400,
+                    error: 'Invalid Access',
+                    message: 'Please Login again!'
+                });
+            } else {
+                const foundedUser = await Resellers.findOne({
+                    username: result.username
+                });
+                await axios.post(`${process.env.FR}:61501/login`, data, { httpsAgent: httpsAgent})
+                .then (async (response) => {
+                    const receivedCookie = response.headers['set-cookie'];
+                    const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+                    const theCookie = cookie.replace('"', '');
+                    const headers = {
+                        headers: {
+                            "Cookie": theCookie
+                        }
+                    };
+                    await axios.post(`${process.env.FR}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+                    .then (async (response) => {
+                        const users = response.data.obj;
+                        let theUsers = [];
+                        users.forEach(user => {
+                            if ((user.remark).startsWith(foundedUser.prefix)) {
+                                theUsers.push(user);
+                            }
+                            return
 
-            });
-            res.status(200).json({
-                users: theUsers
-            });
-        })
-        .catch(err => {
-            res.status(200).json({
-                users: []
-            });
-        });
-    })
-    .catch(err => {
+                        });
+                        res.status(200).json({
+                            users: theUsers
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).json({
+                            users: []
+                        });
+                    });
+                    })
+                    .catch(err => {
+                        res.status(400).json({
+                            err: "Invalid Login"
+                        });
+                    });
+            }
+        });    
+    } catch (err) {
         res.status(400).json({
-            err: "Invalid Login"
+            err: "Something Wrong"
         });
-    });
+    }
 });
 // Get Inbounds List FR2 ##########################################################################################################################
 router.post('/fr2/userslist', async (req, res, err) => {
-    const prefix = req.body.prefix;
-    await axios.post(`${process.env.FR2}:61501/login`, data, { httpsAgent: httpsAgent})
-    .then (async (response) => {
-        const receivedCookie = response.headers['set-cookie'];
-        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
-        const theCookie = cookie.replace('"', '');
-        const headers = {
-            headers: {
-                "Cookie": theCookie
-            }
-        };
-        await axios.post(`${process.env.FR2}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (async (response) => {
-            const users = response.data.obj;
-            let theUsers = [];
-            users.forEach(user => {
-                if ((user.remark).startsWith(prefix)) {
-                    theUsers.push(user);
-                }
-                return
+    try {
+        const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
+            if (err) {
+                res.status(400).json({
+                    code: 400,
+                    error: 'Invalid Access',
+                    message: 'Please Login again!'
+                });
+            } else {
+                const foundedUser = await Resellers.findOne({
+                    username: result.username
+                });
+                await axios.post(`${process.env.FR2}:61501/login`, data, { httpsAgent: httpsAgent})
+                .then (async (response) => {
+                    const receivedCookie = response.headers['set-cookie'];
+                    const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+                    const theCookie = cookie.replace('"', '');
+                    const headers = {
+                        headers: {
+                            "Cookie": theCookie
+                        }
+                    };
+                    await axios.post(`${process.env.FR2}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+                    .then (async (response) => {
+                        const users = response.data.obj;
+                        let theUsers = [];
+                        users.forEach(user => {
+                            if ((user.remark).startsWith(foundedUser.prefix)) {
+                                theUsers.push(user);
+                            }
+                            return
 
-            });
-            res.status(200).json({
-                users: theUsers
-            });
-        })
-        .catch(err => {
-            res.status(200).json({
-                users: []
-            });
-        });
-    })
-    .catch(err => {
+                        });
+                        res.status(200).json({
+                            users: theUsers
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).json({
+                            users: []
+                        });
+                    });
+                    })
+                    .catch(err => {
+                        res.status(400).json({
+                            err: "Invalid Login"
+                        });
+                    });
+            }
+        });    
+    } catch (err) {
         res.status(400).json({
-            err: "Invalid Login"
+            err: "Something Wrong"
         });
-    });
+    }
 });
 
 // Get Inbounds List FI ##########################################################################################################################
 router.post('/fi/userslist', async (req, res, err) => {
-    const prefix = req.body.prefix;
-    await axios.post(`${process.env.FI}:61501/login`, data, { httpsAgent: httpsAgent})
-    .then (async (response) => {
-        const receivedCookie = response.headers['set-cookie'];
-        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
-        const theCookie = cookie.replace('"', '');
-        const headers = {
-            headers: {
-                "Cookie": theCookie
-            }
-        };
-        await axios.post(`${process.env.FI}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (async (response) => {
-            const users = response.data.obj;
-            let theUsers = [];
-            users.forEach(user => {
-                if ((user.remark).startsWith(prefix)) {
-                    theUsers.push(user);
-                }
-                return
+    try {
+        const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
+            if (err) {
+                res.status(400).json({
+                    code: 400,
+                    error: 'Invalid Access',
+                    message: 'Please Login again!'
+                });
+            } else {
+                const foundedUser = await Resellers.findOne({
+                    username: result.username
+                });
+                await axios.post(`${process.env.FI}:61501/login`, data, { httpsAgent: httpsAgent})
+                .then (async (response) => {
+                    const receivedCookie = response.headers['set-cookie'];
+                    const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+                    const theCookie = cookie.replace('"', '');
+                    const headers = {
+                        headers: {
+                            "Cookie": theCookie
+                        }
+                    };
+                    await axios.post(`${process.env.FI}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+                    .then (async (response) => {
+                        const users = response.data.obj;
+                        let theUsers = [];
+                        users.forEach(user => {
+                            if ((user.remark).startsWith(foundedUser.prefix)) {
+                                theUsers.push(user);
+                            }
+                            return
 
-            });
-            res.status(200).json({
-                users: theUsers
-            });
-        })
-        .catch(err => {
-            res.status(200).json({
-                users: []
-            });
-        });
-    })
-    .catch(err => {
+                        });
+                        res.status(200).json({
+                            users: theUsers
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).json({
+                            users: []
+                        });
+                    });
+                    })
+                    .catch(err => {
+                        res.status(400).json({
+                            err: "Invalid Login"
+                        });
+                    });
+            }
+        });    
+    } catch (err) {
         res.status(400).json({
-            err: "Invalid Login"
+            err: "Something Wrong"
         });
-    });
+    }
 });
 
 // Get Inbounds List NL ##########################################################################################################################
 router.post('/nl/userslist', async (req, res, err) => {
-    const prefix = req.body.prefix;
-    await axios.post(`${process.env.NL}:61501/login`, data, { httpsAgent: httpsAgent})
-    .then (async (response) => {
-        const receivedCookie = response.headers['set-cookie'];
-        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
-        const theCookie = cookie.replace('"', '');
-        const headers = {
-            headers: {
-                "Cookie": theCookie
-            }
-        };
-        await axios.post(`${process.env.NL}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (async (response) => {
-            const users = response.data.obj;
-            let theUsers = [];
-            users.forEach(user => {
-                if ((user.remark).startsWith(prefix)) {
-                    theUsers.push(user);
-                }
-                return
+    try {
+        const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
+            if (err) {
+                res.status(400).json({
+                    code: 400,
+                    error: 'Invalid Access',
+                    message: 'Please Login again!'
+                });
+            } else {
+                const foundedUser = await Resellers.findOne({
+                    username: result.username
+                });
+                await axios.post(`${process.env.NL}:61501/login`, data, { httpsAgent: httpsAgent})
+                .then (async (response) => {
+                    const receivedCookie = response.headers['set-cookie'];
+                    const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+                    const theCookie = cookie.replace('"', '');
+                    const headers = {
+                        headers: {
+                            "Cookie": theCookie
+                        }
+                    };
+                    await axios.post(`${process.env.NL}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+                    .then (async (response) => {
+                        const users = response.data.obj;
+                        let theUsers = [];
+                        users.forEach(user => {
+                            if ((user.remark).startsWith(foundedUser.prefix)) {
+                                theUsers.push(user);
+                            }
+                            return
 
-            });
-            res.status(200).json({
-                users: theUsers
-            });
-        })
-        .catch(err => {
-            res.status(200).json({
-                users: []
-            });
-        });
-    })
-    .catch(err => {
+                        });
+                        res.status(200).json({
+                            users: theUsers
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).json({
+                            users: []
+                        });
+                    });
+                    })
+                    .catch(err => {
+                        res.status(400).json({
+                            err: "Invalid Login"
+                        });
+                    });
+            }
+        });    
+    } catch (err) {
         res.status(400).json({
-            err: "Invalid Login"
+            err: "Something Wrong"
         });
-    });
+    }
 });
 
 // Get Inbounds List DE ##########################################################################################################################
 router.post('/de/userslist', async (req, res, err) => {
-    const prefix = req.body.prefix;
-    await axios.post(`${process.env.DE}:61501/login`, data, { httpsAgent: httpsAgent})
-    .then (async (response) => {
-        const receivedCookie = response.headers['set-cookie'];
-        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
-        const theCookie = cookie.replace('"', '');
-        const headers = {
-            headers: {
-                "Cookie": theCookie
-            }
-        };
-        await axios.post(`${process.env.DE}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (async (response) => {
-            const users = response.data.obj;
-            let theUsers = [];
-            users.forEach(user => {
-                if ((user.remark).startsWith(prefix)) {
-                    theUsers.push(user);
-                }
-                return
+    try {
+        const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
+            if (err) {
+                res.status(400).json({
+                    code: 400,
+                    error: 'Invalid Access',
+                    message: 'Please Login again!'
+                });
+            } else {
+                const foundedUser = await Resellers.findOne({
+                    username: result.username
+                });
+                await axios.post(`${process.env.DE}:61501/login`, data, { httpsAgent: httpsAgent})
+                .then (async (response) => {
+                    const receivedCookie = response.headers['set-cookie'];
+                    const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+                    const theCookie = cookie.replace('"', '');
+                    const headers = {
+                        headers: {
+                            "Cookie": theCookie
+                        }
+                    };
+                    await axios.post(`${process.env.DE}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+                    .then (async (response) => {
+                        const users = response.data.obj;
+                        let theUsers = [];
+                        users.forEach(user => {
+                            if ((user.remark).startsWith(foundedUser.prefix)) {
+                                theUsers.push(user);
+                            }
+                            return
 
-            });
-            res.status(200).json({
-                users: theUsers
-            });
-        })
-        .catch(err => {
-            res.status(200).json({
-                users: []
-            });
-        });
-    })
-    .catch(err => {
+                        });
+                        res.status(200).json({
+                            users: theUsers
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).json({
+                            users: []
+                        });
+                    });
+                    })
+                    .catch(err => {
+                        res.status(400).json({
+                            err: "Invalid Login"
+                        });
+                    });
+            }
+        });    
+    } catch (err) {
         res.status(400).json({
-            err: "Invalid Login"
+            err: "Something Wrong"
         });
-    });
+    }
 });
 
 // Get Inbounds List US ##########################################################################################################################
 router.post('/us/userslist', async (req, res, err) => {
-    const prefix = req.body.prefix;
-    await axios.post(`${process.env.US}:61501/login`, data, { httpsAgent: httpsAgent})
-    .then (async (response) => {
-        const receivedCookie = response.headers['set-cookie'];
-        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
-        const theCookie = cookie.replace('"', '');
-        const headers = {
-            headers: {
-                "Cookie": theCookie
-            }
-        };
-        await axios.post(`${process.env.US}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
-        .then (async (response) => {
-            const users = response.data.obj;
-            let theUsers = [];
-            users.forEach(user => {
-                if ((user.remark).startsWith(prefix)) {
-                    theUsers.push(user);
-                }
-                return
+    try {
+        const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
+            if (err) {
+                res.status(400).json({
+                    code: 400,
+                    error: 'Invalid Access',
+                    message: 'Please Login again!'
+                });
+            } else {
+                const foundedUser = await Resellers.findOne({
+                    username: result.username
+                });
+                await axios.post(`${process.env.US}:61501/login`, data, { httpsAgent: httpsAgent})
+                .then (async (response) => {
+                    const receivedCookie = response.headers['set-cookie'];
+                    const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+                    const theCookie = cookie.replace('"', '');
+                    const headers = {
+                        headers: {
+                            "Cookie": theCookie
+                        }
+                    };
+                    await axios.post(`${process.env.US}:61501/xui/inbound/list`,{}, headers, { httpsAgent: httpsAgent })
+                    .then (async (response) => {
+                        const users = response.data.obj;
+                        let theUsers = [];
+                        users.forEach(user => {
+                            if ((user.remark).startsWith(foundedUser.prefix)) {
+                                theUsers.push(user);
+                            }
+                            return
 
-            });
-            res.status(200).json({
-                users: theUsers
-            });
-        })
-        .catch(err => {
-            res.status(200).json({
-                users: []
-            });
-        });
-    })
-    .catch(err => {
+                        });
+                        res.status(200).json({
+                            users: theUsers
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).json({
+                            users: []
+                        });
+                    });
+                    })
+                    .catch(err => {
+                        res.status(400).json({
+                            err: "Invalid Login"
+                        });
+                    });
+            }
+        });    
+    } catch (err) {
         res.status(400).json({
-            err: "Invalid Login"
+            err: "Something Wrong"
         });
-    });
+    }
 });
 
 // Get Resellers Credit ##########################################################################################################################
