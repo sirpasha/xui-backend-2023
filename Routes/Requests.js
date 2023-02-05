@@ -1230,13 +1230,19 @@ router.post('/fr/userslist', async (req, res, err) => {
                     .then (async (response) => {
                         const users = response.data.obj;
                         let theUsers = [];
-                        users.forEach(user => {
-                            if ((user.remark).startsWith(foundedUser.prefix)) {
-                                theUsers.push(user);
-                            }
-                            return
-
-                        });
+                        if (foundedUser.prefix) {
+                            users.forEach(user => {
+                                if ((user.remark).startsWith(foundedUser.prefix)) {
+                                    theUsers.push(user);
+                                }
+                                return
+                                
+                            });
+                        } else {
+                            users.forEach(user => {
+                                theUsers.push(user)
+                            });
+                        }
                         res.status(200).json({
                             users: theUsers
                         });
@@ -1288,13 +1294,19 @@ router.post('/fr2/userslist', async (req, res, err) => {
                     .then (async (response) => {
                         const users = response.data.obj;
                         let theUsers = [];
-                        users.forEach(user => {
-                            if ((user.remark).startsWith(foundedUser.prefix)) {
-                                theUsers.push(user);
-                            }
-                            return
-
-                        });
+                        if (foundedUser.prefix) {
+                            users.forEach(user => {
+                                if ((user.remark).startsWith(foundedUser.prefix)) {
+                                    theUsers.push(user);
+                                }
+                                return
+                                
+                            });
+                        } else {
+                            users.forEach(user => {
+                                theUsers.push(user)
+                            });
+                        }
                         res.status(200).json({
                             users: theUsers
                         });
@@ -1347,13 +1359,19 @@ router.post('/fi/userslist', async (req, res, err) => {
                     .then (async (response) => {
                         const users = response.data.obj;
                         let theUsers = [];
-                        users.forEach(user => {
-                            if ((user.remark).startsWith(foundedUser.prefix)) {
-                                theUsers.push(user);
-                            }
-                            return
-
-                        });
+                        if (foundedUser.prefix) {
+                            users.forEach(user => {
+                                if ((user.remark).startsWith(foundedUser.prefix)) {
+                                    theUsers.push(user);
+                                }
+                                return
+                                
+                            });
+                        } else {
+                            users.forEach(user => {
+                                theUsers.push(user)
+                            });
+                        }
                         res.status(200).json({
                             users: theUsers
                         });
@@ -1406,13 +1424,19 @@ router.post('/nl/userslist', async (req, res, err) => {
                     .then (async (response) => {
                         const users = response.data.obj;
                         let theUsers = [];
-                        users.forEach(user => {
-                            if ((user.remark).startsWith(foundedUser.prefix)) {
-                                theUsers.push(user);
-                            }
-                            return
-
-                        });
+                        if (foundedUser.prefix) {
+                            users.forEach(user => {
+                                if ((user.remark).startsWith(foundedUser.prefix)) {
+                                    theUsers.push(user);
+                                }
+                                return
+                                
+                            });
+                        } else {
+                            users.forEach(user => {
+                                theUsers.push(user)
+                            });
+                        }
                         res.status(200).json({
                             users: theUsers
                         });
@@ -1465,13 +1489,19 @@ router.post('/de/userslist', async (req, res, err) => {
                     .then (async (response) => {
                         const users = response.data.obj;
                         let theUsers = [];
-                        users.forEach(user => {
-                            if ((user.remark).startsWith(foundedUser.prefix)) {
-                                theUsers.push(user);
-                            }
-                            return
-
-                        });
+                        if (foundedUser.prefix) {
+                            users.forEach(user => {
+                                if ((user.remark).startsWith(foundedUser.prefix)) {
+                                    theUsers.push(user);
+                                }
+                                return
+                                
+                            });
+                        } else {
+                            users.forEach(user => {
+                                theUsers.push(user)
+                            });
+                        }
                         res.status(200).json({
                             users: theUsers
                         });
@@ -1524,13 +1554,19 @@ router.post('/us/userslist', async (req, res, err) => {
                     .then (async (response) => {
                         const users = response.data.obj;
                         let theUsers = [];
-                        users.forEach(user => {
-                            if ((user.remark).startsWith(foundedUser.prefix)) {
-                                theUsers.push(user);
-                            }
-                            return
-
-                        });
+                        if (foundedUser.prefix) {
+                            users.forEach(user => {
+                                if ((user.remark).startsWith(foundedUser.prefix)) {
+                                    theUsers.push(user);
+                                }
+                                return
+                                
+                            });
+                        } else {
+                            users.forEach(user => {
+                                theUsers.push(user)
+                            });
+                        }
                         res.status(200).json({
                             users: theUsers
                         });
