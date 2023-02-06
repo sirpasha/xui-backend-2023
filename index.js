@@ -16,7 +16,10 @@ const Resellers = require('./Models/Resellers');
 // Set up Global configuration access
 dotenv.config();
 
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+}));
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
