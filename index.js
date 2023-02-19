@@ -7,6 +7,20 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 //Routes
 const Requests = require('./Routes/Requests');
+
+const De = require('./Routes/De');
+const De2 = require('./Routes/De2');
+
+const Fi = require('./Routes/Fi');
+const Fi2 = require('./Routes/Fi2');
+
+const Fr = require('./Routes/Fr');
+const Fr2 = require('./Routes/Fr2');
+
+const Nl = require('./Routes/Nl');
+
+const Us = require('./Routes/Us');
+
 const Auth = require('./Auth');
 
 //Models 
@@ -28,7 +42,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(['/reseller', '/check', '/reg', '/us/status', '/fr/status','/fr2/status', '/nl/status', '/de/status', '/de/add', '/us/add', '/nl/add', '/fr/add', '/fr2/add', '/nl/inbounds', '/us/inbounds', '/de/inbounds', '/fr/inbounds', '/fr2/inbounds', '/fr/userslist', '/fr2/userslist', '/de/userslist', '/nl/userslist', '/us/userslist', '/fi/revise', '/nl/revise', '/de/revise', '/us/revise', '/fr/revise', '/fr2/revise'], async (req, res, next) => {
+app.use(['/de', '/de2', '/fi', '/fi2', '/fr', '/fr2', '/nl', '/us', '/reseller', '/check', '/reg'], async (req, res, next) => {
   if (req.headers.token) {
       const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
           if (err) {
@@ -69,9 +83,16 @@ const server_host = process.env.BASE_URL;
 // Connect to MongoDB database
 mongoose.connect(process.env.MONGODBASE_URL, { useNewUrlParser: true })
 .then(() => {
-    app.use('/', Requests);
     app.use('/login', Auth);
-
+    app.use('/', Requests);
+    app.use('/de', De);
+    app.use('/de2', De2);
+    app.use('/fi', Fi);
+    app.use('/fi2', Fi2);
+    app.use('/fr', Fr);
+    app.use('/fr2', Fr2);
+    app.use('/nl', Nl);
+    app.use('/us', Us);
     app.listen(server_port,server_host, () => {
     console.log(`Resellers App Started on ${server_port}`)
     })
