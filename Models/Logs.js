@@ -4,8 +4,7 @@ const unixTimestamp = require('mongoose-unix-timestamp');
 const LogsSchema = new mongoose.Schema({
     reseller: {type: String},
     credit: {type: Number},
-    remark: {type: String},
-    port: {type: String}
+    description: {type: String}
 });
 
 LogsSchema.plugin(unixTimestamp);

@@ -331,7 +331,7 @@ const creditManage = async (value, remark, port) => {
 
         const findReseller = await Resellers.findOne({username: result.username})
         .then(async (res) => {
-            const logs = new Logs({ reseller: res.username, credit: res.credit, remark: remark, port: port });
+            const logs = new Logs({ reseller: res.username, credit: res.credit - 1, description: `${remark}:${port} تمدید/ایجاد شد` });
 
             logs.save(function (err, logs) {
                 if (err) return console.error(err);
