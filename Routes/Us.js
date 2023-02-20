@@ -326,19 +326,26 @@ router.post('/revise', async (req, res, err) => {
 
 });
 
-const creditManage = async (value) => {
+const creditManage = async (value, remark, port) => {
     const token = jwt.verify(value, process.env.TOKEN, async (err,result) => {
 
-        const logs = new Logs({ reseller: result.username, credit: result.credit, remark: remark, port: port });
+        const findReseller = await Resellers.findOne({username: result.username})
+        .then(async (res) => {
+            const logs = new Logs({ reseller: res.username, credit: res.credit, remark: remark, port: port });
 
-        logs.save(function (err, logs) {
-            if (err) return console.error(err);
+            logs.save(function (err, logs) {
+                if (err) return console.error(err);
+                console.log(logs);
+            });
+            
+            const user = await Resellers.findOneAndUpdate(
+                {username: result.username},
+                { $inc: {credit: - 1} }
+            );
+        })
+        .catch(err => {
+            console.error(err);
         });
-
-        const user = await Resellers.findOneAndUpdate(
-            {username: result.username},
-            { $inc: {credit: - 1} }
-        );
     });
 };
 
