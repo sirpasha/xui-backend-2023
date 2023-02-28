@@ -294,7 +294,7 @@ router.post('/revise', async (req, res, err) => {
         const remark = req.body.remark;
         const port = req.body.port;
         const theUUId = req.body.uuid;
-        const total = 53687091200;
+        const total = 32212254720;
         const month = 30 * 24 * 3600;
         const expTime = (unixTimestamp() + month) * 1000;
         const raw = `up=0&down=0&total=${total}&remark=${remark}&enable=true&expiryTime=${expTime}&listen=&port=${port}&protocol=vmess&settings=%7B%0A%20%20%22clients%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22id%22%3A%20%22${theUUId}%22%2C%0A%20%20%20%20%20%20%22alterId%22%3A%200%0A%20%20%20%20%7D%0A%20%20%5D%2C%0A%20%20%22disableInsecureEncryption%22%3A%20false%0A%7D&streamSettings=%7B%0A%20%20%22network%22%3A%20%22ws%22%2C%0A%20%20%22security%22%3A%20%22tls%22%2C%0A%20%20%22tlsSettings%22%3A%20%7B%0A%20%20%20%20%22serverName%22%3A%20%22${theServerUrl}%22%2C%0A%20%20%20%20%22certificates%22%3A%20%5B%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22certificateFile%22%3A%20%22%2Froot%2Fcert%2F${theServerUrl}.cer%22%2C%0A%20%20%20%20%20%20%20%20%22keyFile%22%3A%20%22%2Froot%2Fcert%2F${theServerUrl}.key%22%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%2C%0A%20%20%20%20%22alpn%22%3A%20%5B%5D%0A%20%20%7D%2C%0A%20%20%22wsSettings%22%3A%20%7B%0A%20%20%20%20%22acceptProxyProtocol%22%3A%20false%2C%0A%20%20%20%20%22path%22%3A%20%22%2F%22%2C%0A%20%20%20%20%22headers%22%3A%20%7B%7D%0A%20%20%7D%0A%7D&sniffing=%7B%0A%20%20%22enabled%22%3A%20true%2C%0A%20%20%22destOverride%22%3A%20%5B%0A%20%20%20%20%22http%22%2C%0A%20%20%20%20%22tls%22%0A%20%20%5D%0A%7D`;
