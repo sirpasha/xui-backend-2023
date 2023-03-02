@@ -125,7 +125,7 @@ router.post('/add', async (req, res, err) => {
                                 "tls": "tls"
                             };
                             creditManage(req.headers.token, user.remark, user.port);
-                            sendToTelegram(userPrefix);
+                            sendToTelegram(user, "ایجاد");
                             const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
                         res.status(200).json({
                             uri: `vmess://${theCreatedUser}`,
@@ -305,6 +305,7 @@ router.post('/revise', async (req, res, err) => {
             await axios.post(`${serverAddress}:61501/xui/inbound/update/${id}`, raw, headers, { httpsAgent: httpsAgent })
             .then(response => {
                 creditManage(req.headers.token, remark, port);
+                sendToTelegram(user, "تمدید");
                 res.status(200).json({
                     msg: "User Updated Successfully"
                 });
@@ -329,16 +330,10 @@ router.post('/revise', async (req, res, err) => {
 
 });
 
-const sendToTelegram = async (userPrefix) => {
-    console.log(userPrefix);
-        await bot.telegram.sendMessage(298641340, "USERDETAILS!")
-        .then(response => console.log(response))
-        .catch(err => console.log(err));
-
-        await bot.telegram.sendMessage(-1001173157040, "USERDETAILS!")
-        .then(response => console.log(response))
-        .catch(err => console.log(err));
-
+const sendToTelegram = async (user, status) => {
+    await bot.telegram.sendMessage(-1001832726797, `کاربر ${user.remark} با پورت ${user.port} و شناسه ${user.id} روی سرور ${theServerUrl} با موفقیت ${status} شد.`)
+    .then(response => console.log(response))
+    .catch(err => console.log(err));
 };
 
 const creditManage = async (value, remark, port) => {
