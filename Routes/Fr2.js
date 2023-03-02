@@ -14,6 +14,8 @@ const bcrypt = require('bcrypt');
 
 const Resellers = require('../Models/Resellers');
 const Logs = require('../Models/Logs');
+const {Telegraf} = require('telegraf')
+const bot = new Telegraf('6117756292:AAGrRDyqOqJtVQytB8VLk7V3l-1tEZOhXoE');
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 dotenv.config();
@@ -123,6 +125,7 @@ router.post('/add', async (req, res, err) => {
                                 "tls": "tls"
                             };
                             creditManage(req.headers.token, user.remark, user.port);
+                            sendToTelegram(user, "ایجاد");
                             const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
                         res.status(200).json({
                             uri: `vmess://${theCreatedUser}`,
@@ -298,10 +301,16 @@ router.post('/revise', async (req, res, err) => {
         const month = 30 * 24 * 3600;
         const expTime = (unixTimestamp() + month) * 1000;
         const raw = `up=0&down=0&total=${total}&remark=${remark}&enable=true&expiryTime=${expTime}&listen=&port=${port}&protocol=vmess&settings=%7B%0A%20%20%22clients%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22id%22%3A%20%22${theUUId}%22%2C%0A%20%20%20%20%20%20%22alterId%22%3A%200%0A%20%20%20%20%7D%0A%20%20%5D%2C%0A%20%20%22disableInsecureEncryption%22%3A%20false%0A%7D&streamSettings=%7B%0A%20%20%22network%22%3A%20%22ws%22%2C%0A%20%20%22security%22%3A%20%22tls%22%2C%0A%20%20%22tlsSettings%22%3A%20%7B%0A%20%20%20%20%22serverName%22%3A%20%22${theServerUrl}%22%2C%0A%20%20%20%20%22certificates%22%3A%20%5B%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22certificateFile%22%3A%20%22%2Froot%2Fcert%2F${theServerUrl}.cer%22%2C%0A%20%20%20%20%20%20%20%20%22keyFile%22%3A%20%22%2Froot%2Fcert%2F${theServerUrl}.key%22%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%2C%0A%20%20%20%20%22alpn%22%3A%20%5B%5D%0A%20%20%7D%2C%0A%20%20%22wsSettings%22%3A%20%7B%0A%20%20%20%20%22acceptProxyProtocol%22%3A%20false%2C%0A%20%20%20%20%22path%22%3A%20%22%2F%22%2C%0A%20%20%20%20%22headers%22%3A%20%7B%7D%0A%20%20%7D%0A%7D&sniffing=%7B%0A%20%20%22enabled%22%3A%20true%2C%0A%20%20%22destOverride%22%3A%20%5B%0A%20%20%20%20%22http%22%2C%0A%20%20%20%20%22tls%22%0A%20%20%5D%0A%7D`;
+        const user = {
+            id: id,
+            port: port,
+            remark: remark
+        };
         try {
             await axios.post(`${serverAddress}:61501/xui/inbound/update/${id}`, raw, headers, { httpsAgent: httpsAgent })
             .then(response => {
                 creditManage(req.headers.token, remark, port);
+                sendToTelegram(user, "تمدید");
                 res.status(200).json({
                     msg: "User Updated Successfully"
                 });
@@ -325,6 +334,12 @@ router.post('/revise', async (req, res, err) => {
 
 
 });
+
+const sendToTelegram = async (user, status) => {
+    await bot.telegram.sendMessage(-1001832726797, `کاربر ${user.remark} با پورت ${user.port} و شناسه ${user.id} روی سرور ${theServerUrl} با موفقیت ${status} شد.`)
+    .then(response => console.log(response))
+    .catch(err => console.log(err));
+};
 
 const creditManage = async (value, remark, port) => {
     const token = jwt.verify(value, process.env.TOKEN, async (err,result) => {
