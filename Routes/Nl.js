@@ -14,6 +14,8 @@ const bcrypt = require('bcrypt');
 
 const Resellers = require('../Models/Resellers');
 const Logs = require('../Models/Logs');
+const {Telegraf} = require('telegraf')
+const bot = new Telegraf('6117756292:AAGrRDyqOqJtVQytB8VLk7V3l-1tEZOhXoE');
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 dotenv.config();
@@ -124,6 +126,8 @@ router.post('/add', async (req, res, err) => {
                             };
                             creditManage(req.headers.token, user.remark, user.port);
                             const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
+                            bot.telegram.sendMessage('@aqaqomi', 'hello there! Welcome to my new telegram bot.', {
+                            })
                         res.status(200).json({
                             uri: `vmess://${theCreatedUser}`,
                             id: user.id,

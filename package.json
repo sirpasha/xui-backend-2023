@@ -36,6 +36,7 @@
         "nodemon": "^2.0.20",
         "qrcode": "^1.5.1",
         "shamsi-date-converter": "^1.0.5",
+        "telegraf": "^4.11.2",
         "uuid": "^9.0.0"
     }
 }
