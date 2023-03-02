@@ -125,10 +125,8 @@ router.post('/add', async (req, res, err) => {
                                 "tls": "tls"
                             };
                             creditManage(req.headers.token, user.remark, user.port);
+                            sendToTelegram(userPrefix);
                             const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
-                            bot.telegram.sendMessage('@aqaqomi', userPrefix, {
-                            })
-                            bot.launch();
                         res.status(200).json({
                             uri: `vmess://${theCreatedUser}`,
                             id: user.id,
@@ -330,6 +328,14 @@ router.post('/revise', async (req, res, err) => {
 
 
 });
+
+const sendToTelegram = async (userPrefix) => {
+    console.log(userPrefix);
+    bot.telegram.sendMessage('@aqaqomi', "USERDETAILS!", {});
+    bot.telegram.sendMessage('@aqaqomi', userPrefix, {});
+    bot.launch();
+
+};
 
 const creditManage = async (value, remark, port) => {
     const token = jwt.verify(value, process.env.TOKEN, async (err,result) => {
