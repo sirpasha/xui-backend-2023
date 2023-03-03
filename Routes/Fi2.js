@@ -124,7 +124,7 @@ router.post('/add', async (req, res, err) => {
                                 "path": "/",
                                 "tls": "tls"
                             };
-                            creditManage(req.headers.token, user.remark, user.port);
+                            creditManage(req.headers.token, user.remark, user.port, 'ایجاد');
                             sendToTelegram(user, "ایجاد");
                             const theCreatedUser = await base64json.stringify(userPrefix, null, 2);
                         res.status(200).json({
@@ -309,7 +309,7 @@ router.post('/revise', async (req, res, err) => {
         try {
             await axios.post(`${serverAddress}:61501/xui/inbound/update/${id}`, raw, headers, { httpsAgent: httpsAgent })
             .then(response => {
-                creditManage(req.headers.token, remark, port);
+                creditManage(req.headers.token, remark, port, 'تمدید');
                 sendToTelegram(user, "تمدید");
                 res.status(200).json({
                     msg: "User Updated Successfully"
@@ -341,12 +341,12 @@ const sendToTelegram = async (user, status) => {
     .catch(err => console.log(err));
 };
 
-const creditManage = async (value, remark, port) => {
+const creditManage = async (value, remark, port, theState) => {
     const token = jwt.verify(value, process.env.TOKEN, async (err,result) => {
 
         const findReseller = await Resellers.findOne({username: result.username})
         .then(async (res) => {
-            const logs = new Logs({ reseller: res.username, credit: res.credit - 1, description: `${remark}:${port} تمدید/ایجاد شد` });
+            const logs = new Logs({ reseller: res.username, credit: res.credit - 1, description: `کاربر ${remark} با پورت ${port} بر روی سرور ${theServerUrl} ${theState} شد و یک اعتبار از حساب شما کسر گردید.` });
 
             logs.save(function (err, logs) {
                 if (err) return console.error(err);
