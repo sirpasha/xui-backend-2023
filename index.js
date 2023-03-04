@@ -19,6 +19,8 @@ const Fr2 = require('./Routes/Fr2');
 
 const Nl = require('./Routes/Nl');
 
+const Pl = require('./Routes/Pl');
+
 const Us = require('./Routes/Us');
 
 const Auth = require('./Auth');
@@ -42,7 +44,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(['/de', '/de2', '/fi', '/fi2', '/fr', '/fr2', '/nl', '/us', '/reseller', '/check', '/reg'], async (req, res, next) => {
+app.use(['/de', '/de2', '/fi', '/fi2', '/fr', '/fr2', '/nl', '/us', '/pl', '/reseller', '/check', '/reg'], async (req, res, next) => {
   if (req.headers.token) {
       const token = jwt.verify(req.headers.token, process.env.TOKEN, async (err,result) => {
           if (err) {
@@ -92,6 +94,7 @@ mongoose.connect(process.env.MONGODBASE_URL, { useNewUrlParser: true })
     app.use('/fr', Fr);
     app.use('/fr2', Fr2);
     app.use('/nl', Nl);
+    app.use('/pl', Pl);
     app.use('/us', Us);
     app.listen(server_port,server_host, () => {
     console.log(`Resellers App Started on ${server_port}`)
