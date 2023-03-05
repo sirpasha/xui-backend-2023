@@ -20,6 +20,7 @@ const Fr2 = require('./Routes/Fr2');
 const Nl = require('./Routes/Nl');
 
 const Pl = require('./Routes/Pl');
+const Irancell = require('./Routes/Irancell');
 
 const Us = require('./Routes/Us');
 
@@ -95,6 +96,7 @@ mongoose.connect(process.env.MONGODBASE_URL, { useNewUrlParser: true })
     app.use('/fr2', Fr2);
     app.use('/nl', Nl);
     app.use('/pl', Pl);
+    app.use('/ircell', Irancell);
     app.use('/us', Us);
     app.listen(server_port,server_host, () => {
     console.log(`Resellers App Started on ${server_port}`)
