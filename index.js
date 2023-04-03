@@ -10,6 +10,7 @@ const Requests = require('./Routes/Requests');
 
 const De = require('./Routes/De');
 const De2 = require('./Routes/De2');
+const De3 = require('./Routes/De3');
 
 const Fi = require('./Routes/Fi');
 const Fi2 = require('./Routes/Fi2');
@@ -22,6 +23,7 @@ const Nl = require('./Routes/Nl');
 const Pl = require('./Routes/Pl');
 const Fr3 = require('./Routes/Fr3');
 
+const Uk = require('./Routes/Uk');
 const Us = require('./Routes/Us');
 
 const Auth = require('./Auth');
@@ -90,6 +92,7 @@ mongoose.connect(process.env.MONGODBASE_URL, { useNewUrlParser: true })
     app.use('/', Requests);
     app.use('/de', De);
     app.use('/de2', De2);
+    app.use('/de3', De3);
     app.use('/fi', Fi);
     app.use('/fi2', Fi2);
     app.use('/fr', Fr);
@@ -98,6 +101,7 @@ mongoose.connect(process.env.MONGODBASE_URL, { useNewUrlParser: true })
     app.use('/pl', Pl);
     app.use('/fr3', Fr3);
     app.use('/us', Us);
+    app.use('/uk', Uk);
     app.listen(server_port,server_host, () => {
     console.log(`Resellers App Started on ${server_port}`)
     })
