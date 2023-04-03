@@ -20,8 +20,8 @@ const bot = new Telegraf('6117756292:AAGrRDyqOqJtVQytB8VLk7V3l-1tEZOhXoE');
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 dotenv.config();
 
-const theServerUrl = "ircell.aqaqomi.ir";
-const serverAddress= process.env.IRCELL;
+const theServerUrl = "fr3.aqaqomi.ir";
+const serverAddress= process.env.FR3;
 const data = {
     'username': process.env.LOGIN,
     'password': process.env.PASSWORD
@@ -111,7 +111,7 @@ router.post('/add', async (req, res, err) => {
                     .then(async (response) => {
                         const users = response.data.obj;
                         const user = await users.find(el => el.remark == remark);
-                        //vless://60fb828b-49a6-4b02-878b-d52e2ca6d737@ircell.aqaqomi.ir:30712?type=grpc&security=tls&serviceName=&sni=ircell.aqaqomi.ir#NEWTEST
+                        //vless://60fb828b-49a6-4b02-878b-d52e2ca6d737@fr3.aqaqomi.ir:30712?type=grpc&security=tls&serviceName=&sni=fr3.aqaqomi.ir#NEWTEST
                         if (user || user.port == thePort) {
                             const usersUuid = (JSON.parse(decodeURIComponent(user.settings).toString())).clients[0].id;
                             creditManage(req.headers.token, user.remark, user.port, 'ایجاد');
