@@ -34,7 +34,43 @@ router.use((req, res, next) => {
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
+// Delete Users ##########################################################################################################################
+router.post('/delete', async (req, res, err) => {
+    const user = {
+        id: req.body.id,
+        port: req.body.port,
+        remark: req.body.remark
+    };
+    await axios.post(`${serverAddress}:61501/login`, data, { httpsAgent: httpsAgent})
+    .then (async (response) => {
+        const receivedCookie = response.headers['set-cookie'];
+        const cookie = JSON.stringify(receivedCookie).replace(/[\])}[{(]/g, '');
+        const theCookie = cookie.replace('"', '');
+        const headers = {
+            headers: {
+                "Cookie": theCookie
+            }
+        };
 
+        await axios.post(`${serverAddress}:61501/xui/inbound/del/${user.id}`,{}, headers, { httpsAgent: httpsAgent })
+        .then (response => {
+            sendToTelegram(user, "حذف");
+            res.status(200).json({
+                msg: "Deleted Successfully"
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                err: "Error Getting Status"
+            });
+        });
+    })
+    .catch(err => {
+        res.status(400).json({
+            err: "Invalid Login"
+        });
+    });
+});
 
 // Get Server's Status UK ###########
 router.get('/status', async (req, res, err) => {
